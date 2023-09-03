@@ -1,0 +1,115 @@
+name: CI
+
+permissions:
+  contents: read
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 2 * * 0'
+
+env:
+  CARGO_INCREMENTAL: 0
+  CARGO_NET_GIT_FETCH_WITH_CLI: true
+  CARGO_NET_RETRY: 10
+  CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: 1
+  RUSTFLAGS: -D warnings
+  RUSTDOCFLAGS: -D warnings
+  RUSTUP_MAX_RETRIES: 10
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        rust: [nightly, beta, stable]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Rust
+        # --no-self-update is necessary because the windows environment cannot self-update rustup.exe.
+        run: rustup update ${{ matrix.rust }} --no-self-update && rustup default ${{ matrix.rust }}
+      - run: rustup target add thumbv7m-none-eabi
+      - name: Install wasm-pack
+        uses: taiki-e/install-action@wasm-pack
+        if: startsWith(matrix.os, 'ubuntu')
+      - name: Run cargo check
+        run: cargo check --all --all-features --all-targets
+        if: startsWith(matrix.rust, 'nightly')
+      - name: Run cargo check (without dev-dependencies to catch missing feature flags)
+        if: startsWith(matrix.rust, 'nightly')
+        run: cargo check -Z features=dev_dep
+      - run: cargo test
+      - name: Build with no default features
+        # Use no-std target to ensure we don't link to std.
+        run: cargo build --no-default-features --target thumbv7m-none-eabi
+      - name: Build with no default features and alloc
+        # Use no-std target to ensure we don't link to std.
+        run: cargo build --no-default-features --features alloc --target thumbv7m-none-eabi
+      - name: Test wasm
+        run: wasm-pack test --headless --chrome
+        if: startsWith(matrix.os, 'ubuntu')
+      - run: cargo bench
+        if: startsWith(matrix.rust, 'nightly')
+
+  wasi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Rust
+        run: rustup update stable
+      - uses: taiki-e/setup-cross-toolchain-action@v1
+        with:
+          target: wasm32-wasi
+      - run: cargo test --target wasm32-wasi
+
+  msrv:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # When updating this, the reminder to update the minimum supported
+        # Rust version in Cargo.toml.
+        rust: ['1.36']
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Rust
+        run: rustup update ${{ matrix.rust }} && rustup default ${{ matrix.rust }}
+      - run: cargo build
+
+  clippy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Rust
+        run: rustup update stable
+      - run: cargo clippy --all-features --tests --examples
+
+  fmt:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Rust
+        run: rustup update stable
+      - run: cargo fmt --all --check
+
+  security_audit:
+    permissions:
+      checks: write
+      contents: read
+      issues: write
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      # https://github.com/rustsec/audit-check/issues/2
+      - uses: rustsec/audit-check@master
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
