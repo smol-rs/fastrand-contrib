@@ -39,24 +39,30 @@ impl BaseRng for GlobalRng {
 
 macro_rules! define_ext {
     ($(
+        $(#[$meta:meta])*
         fn $name:ident(&mut self, $($argname:ident:$argty:ty),*) -> $ret:ty $bl:block
     )*) => {
+        /// Extra methods for [`fastrand::Rng`].
         pub trait RngExt {
             $(
+            $(#[$meta])*
             fn $name(&mut self, $($argname: $argty),*) -> $ret;
             )*
         }
 
         impl RngExt for Rng {
             $(
+            $(#[$meta])*
             fn $name(&mut self, $($argname: $argty),*) -> $ret $bl
             )*
         }
 
         $(
         #[cfg(feature = "std")]
+        $(#[$meta])*
         pub fn $name($($argname:$argty),*) -> $ret {
             impl GlobalRng {
+                $(#[$meta])*
                 fn $name(&mut self, $($argname:$argty),*) -> $ret $bl
             }
 
@@ -67,11 +73,13 @@ macro_rules! define_ext {
 }
 
 define_ext! {
+    /// Generate a 32-bit floating point number in the specified range.
     fn f32_range(&mut self, range: impl RangeBounds<f32>) -> f32 {
         let _ = range;
         todo!()
     }
 
+    /// Generate a 64-bit floating point number in the specified range.
     fn f64_range(&mut self, range: impl RangeBounds<f64>) -> f64 {
         let _ = range;
         todo!()
