@@ -1,6 +1,47 @@
 //! Extension functionality for the [`fastrand`] crate.
 //!
+//! This crate contains code that may be of some use to users of [`fastrand`]. Code contained in
+//! this crate is not included in [`fastrand`] due to either the niche not being large enough to
+//! justify the new functionality or for semver concerns.
+//!
+//! ## Usage
+//!
+//! Various functions are exposed in this crate as top-level functions. These manipulate the global
+//! thread-local RNG and can be used without any local state. Note that these require the `"std"`
+//! default feature to be enabled.
+//!
+//! ```
+//! # #[cfg(feature = "std")] {
+//! use fastrand_contrib::f32_range;
+//!
+//! let x = f32_range(1.5..3.0);
+//! assert!(x >= 1.5 && x < 3.0);
+//! # }
+//! ```
+//!
+//! To extend [`fastrand::Rng`], import the [`RngExt`] trait.
+//!
+//! ```
+//! use fastrand_contrib::RngExt;
+//! ```
+//!
+//! Now, all new methods are available on [`fastrand::Rng`].
+//!
+//! ```
+//! use fastrand::Rng;
+//! use fastrand_contrib::RngExt;
+//!
+//! let mut rng = Rng::with_seed(0x1234);
+//! let x = rng.f32_range(1.5..3.0);
+//! assert!(x >= 1.5 && x < 3.0);
+//! ```
+//! # Features
+//!
+//! - `std` (enabled by default): Enables the `std` library. Freestanding functions only work with this
+//!   feature enabled. Also enables the `fastrand/std` feature.
+//!
 //! [`fastrand`]: https://crates.io/crates/fastrand
+//! [`fastrand::Rng`]: https://docs.rs/fastrand/latest/fastrand/struct.Rng.html
 
 #![cfg_attr(not(feature = "std"), no_std)]
 
