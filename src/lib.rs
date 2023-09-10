@@ -2,6 +2,8 @@
 //!
 //! [`fastrand`]: https://crates.io/crates/fastrand
 
+mod float_range;
+
 use core::ops::RangeBounds;
 
 pub use fastrand::{self, Rng};
@@ -9,6 +11,7 @@ pub use fastrand::{self, Rng};
 trait BaseRng {
     fn f32(&mut self) -> f32;
     fn f64(&mut self) -> f64;
+    fn bool(&mut self) -> bool;
 }
 
 impl BaseRng for Rng {
@@ -19,6 +22,10 @@ impl BaseRng for Rng {
     #[inline]
     fn f64(&mut self) -> f64 {
         Rng::f64(self)
+    }
+    #[inline]
+    fn bool(&mut self) -> bool {
+        Rng::bool(self)
     }
 }
 
@@ -34,6 +41,10 @@ impl BaseRng for GlobalRng {
     #[inline]
     fn f64(&mut self) -> f64 {
         fastrand::f64()
+    }
+    #[inline]
+    fn bool(&mut self) -> bool {
+        fastrand::bool()
     }
 }
 
@@ -78,28 +89,14 @@ macro_rules! define_ext {
 
 define_ext! {
     /// Generate a 32-bit floating point number in the specified range.
-    fn f32_range(&mut self, range: impl RangeBounds<f32>) -> f32 => f32_range_impl;
+    fn f32_range(&mut self, range: impl RangeBounds<f32>) -> f32 => float_range::f32;
 
     /// Generate a 64-bit floating point number in the specified range.
-    fn f64_range(&mut self, range: impl RangeBounds<f64>) -> f64 => f64_range_impl;
+    fn f64_range(&mut self, range: impl RangeBounds<f64>) -> f64 => float_range::f64;
 }
 
 mod __private {
     #[doc(hidden)]
     pub trait Sealed {}
     impl Sealed for fastrand::Rng {}
-}
-
-#[inline]
-fn f32_range_impl(rng: &mut impl BaseRng, range: impl RangeBounds<f32>) -> f32 {
-    let _ = rng;
-    let _ = range;
-    todo!()
-}
-
-#[inline]
-fn f64_range_impl(rng: &mut impl BaseRng, range: impl RangeBounds<f64>) -> f64 {
-    let _ = rng;
-    let _ = range;
-    todo!()
 }
