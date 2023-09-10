@@ -2,6 +2,16 @@
 //!
 //! [`fastrand`]: https://crates.io/crates/fastrand
 
+#![cfg_attr(not(feature = "std"), no_std)]
+#![forbid(unsafe_code)]
+#![warn(missing_docs, missing_debug_implementations)]
+#![doc(
+    html_favicon_url = "https://raw.githubusercontent.com/smol-rs/smol/master/assets/images/logo_fullsize_transparent.png"
+)]
+#![doc(
+    html_logo_url = "https://raw.githubusercontent.com/smol-rs/smol/master/assets/images/logo_fullsize_transparent.png"
+)]
+
 mod float_range;
 
 use core::ops::RangeBounds;
