@@ -1,7 +1,8 @@
 [package]
 name = "fastrand-contrib"
 version = "0.1.0"
-edition = "2021"
+edition = "2018"
+rust-version = "1.43.1"
 
 [dependencies]
 fastrand = { version = "2.0.0", default-features = false }
