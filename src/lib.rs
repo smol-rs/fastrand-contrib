@@ -40,7 +40,7 @@ impl BaseRng for GlobalRng {
 macro_rules! define_ext {
     ($(
         $(#[$meta:meta])*
-        fn $name:ident(&mut self, $($argname:ident:$argty:ty),*) -> $ret:ty $bl:block
+        fn $name:ident(&mut self, $($argname:ident:$argty:ty),*) -> $ret:ty => $imp:path;
     )*) => {
         /// Extra methods for [`fastrand::Rng`].
         pub trait RngExt {
@@ -53,7 +53,9 @@ macro_rules! define_ext {
         impl RngExt for Rng {
             $(
             $(#[$meta])*
-            fn $name(&mut self, $($argname: $argty),*) -> $ret $bl
+            fn $name(&mut self, $($argname: $argty),*) -> $ret {
+                $imp(self, $($argname),*)
+            }
             )*
         }
 
@@ -63,7 +65,9 @@ macro_rules! define_ext {
         pub fn $name($($argname:$argty),*) -> $ret {
             impl GlobalRng {
                 $(#[$meta])*
-                fn $name(&mut self, $($argname:$argty),*) -> $ret $bl
+                fn $name(&mut self, $($argname:$argty),*) -> $ret {
+                    $imp(self, $($argname),*)
+                }
             }
 
             GlobalRng::$name(&mut GlobalRng, $($argname),*)
@@ -74,20 +78,28 @@ macro_rules! define_ext {
 
 define_ext! {
     /// Generate a 32-bit floating point number in the specified range.
-    fn f32_range(&mut self, range: impl RangeBounds<f32>) -> f32 {
-        let _ = range;
-        todo!()
-    }
+    fn f32_range(&mut self, range: impl RangeBounds<f32>) -> f32 => f32_range_impl;
 
     /// Generate a 64-bit floating point number in the specified range.
-    fn f64_range(&mut self, range: impl RangeBounds<f64>) -> f64 {
-        let _ = range;
-        todo!()
-    }
+    fn f64_range(&mut self, range: impl RangeBounds<f64>) -> f64 => f64_range_impl;
 }
 
 mod __private {
     #[doc(hidden)]
     pub trait Sealed {}
     impl Sealed for fastrand::Rng {}
+}
+
+#[inline]
+fn f32_range_impl(rng: &mut impl BaseRng, range: impl RangeBounds<f32>) -> f32 {
+    let _ = rng;
+    let _ = range;
+    todo!()
+}
+
+#[inline]
+fn f64_range_impl(rng: &mut impl BaseRng, range: impl RangeBounds<f64>) -> f64 {
+    let _ = rng;
+    let _ = range;
+    todo!()
 }
