@@ -106,17 +106,17 @@ enum Inclusive {
 impl Inclusive {
     fn from_bounds<T>(range: impl RangeBounds<T>) -> Self {
         match (range.start_bound(), range.end_bound()) {
-            (Bound::Excluded(_), Bound::Excluded(_)) => Self::None,
+            (Bound::Excluded(_), Bound::Excluded(_)) => Inclusive::None,
             (Bound::Included(_), Bound::Excluded(_)) | (Bound::Unbounded, Bound::Excluded(_)) => {
-                Self::Left
+                Inclusive::Left
             }
             (Bound::Excluded(_), Bound::Included(_)) | (Bound::Excluded(_), Bound::Unbounded) => {
-                Self::Right
+                Inclusive::Right
             }
             (Bound::Included(_), Bound::Included(_))
             | (Bound::Included(_), Bound::Unbounded)
             | (Bound::Unbounded, Bound::Included(_))
-            | (Bound::Unbounded, Bound::Unbounded) => Self::Both,
+            | (Bound::Unbounded, Bound::Unbounded) => Inclusive::Both,
         }
     }
 }
