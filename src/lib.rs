@@ -2,6 +2,8 @@
 //!
 //! [`fastrand`]: https://crates.io/crates/fastrand
 
+#![cfg_attr(not(feature = "std"), no_std)]
+
 mod float_range;
 
 use core::ops::RangeBounds;
