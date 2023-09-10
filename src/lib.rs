@@ -39,12 +39,17 @@
 //!
 //! - `std` (enabled by default): Enables the `std` library. Freestanding functions only work with this
 //!   feature enabled. Also enables the `fastrand/std` feature.
+//! - `libm`: Uses [`libm`] dependency for math functions in `no_std` environment.
+//!
+//! Note that some functions are not available in `no_std` context if `libm` feature is not enabled.
 //!
 //! [`fastrand`]: https://crates.io/crates/fastrand
 //! [`fastrand::Rng`]: https://docs.rs/fastrand/latest/fastrand/struct.Rng.html
+//! [`libm`]: https://crates.io/crates/libm
 
 #![cfg_attr(not(feature = "std"), no_std)]
 
+mod float_normal;
 mod float_range;
 
 use core::ops::RangeBounds;
@@ -55,6 +60,7 @@ trait BaseRng {
     fn f32(&mut self) -> f32;
     fn f64(&mut self) -> f64;
     fn bool(&mut self) -> bool;
+    fn u128(&mut self) -> u128;
 }
 
 impl BaseRng for Rng {
@@ -69,6 +75,10 @@ impl BaseRng for Rng {
     #[inline]
     fn bool(&mut self) -> bool {
         Rng::bool(self)
+    }
+    #[inline]
+    fn u128(&mut self) -> u128 {
+        Rng::u128(self, ..)
     }
 }
 
@@ -88,6 +98,10 @@ impl BaseRng for GlobalRng {
     #[inline]
     fn bool(&mut self) -> bool {
         fastrand::bool()
+    }
+    #[inline]
+    fn u128(&mut self) -> u128 {
+        fastrand::u128(..)
     }
 }
 
@@ -136,6 +150,24 @@ define_ext! {
 
     /// Generate a 64-bit floating point number in the specified range.
     fn f64_range(&mut self, range: impl RangeBounds<f64>) -> f64 => float_range::f64;
+
+    /// Generate a 32-bit floating point number in the normal distribution with
+    /// mean mu and standard deviation sigma.
+    #[cfg(any(feature = "std", feature = "libm"))]
+    fn f32_normal(&mut self, mu: f32, sigma: f32) -> f32 => float_normal::f32;
+
+    /// Generate a 64-bit floating point number in the normal distribution with
+    /// mean mu and standard deviation sigma.
+    #[cfg(any(feature = "std", feature = "libm"))]
+    fn f64_normal(&mut self, mu: f64, sigma: f64) -> f64 => float_normal::f64;
+
+    /// Generate a 32-bit floating point number in the normal distribution with
+    /// mean mu and standard deviation sigma using an approximation algorithm.
+    fn f32_normal_approx(&mut self, mu: f32, sigma: f32) -> f32 => float_normal::f32_approx;
+
+    /// Generate a 64-bit floating point number in the normal distribution with
+    /// mean mu and standard deviation sigma using an approximation algorithm.
+    fn f64_normal_approx(&mut self, mu: f64, sigma: f64) -> f64 => float_normal::f64_approx;
 }
 
 mod __private {
