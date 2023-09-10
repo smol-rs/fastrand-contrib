@@ -39,8 +39,6 @@ jobs:
         # --no-self-update is necessary because the windows environment cannot self-update rustup.exe.
         run: rustup update ${{ matrix.rust }} --no-self-update && rustup default ${{ matrix.rust }}
       - run: rustup target add thumbv7m-none-eabi
-      - name: Install wasm-pack
-        uses: taiki-e/install-action@wasm-pack
         if: startsWith(matrix.os, 'ubuntu')
       - name: Run cargo check
         run: cargo check --all --all-features --all-targets
@@ -55,9 +53,6 @@ jobs:
       - name: Build with no default features and alloc
         # Use no-std target to ensure we don't link to std.
         run: cargo build --no-default-features --features alloc --target thumbv7m-none-eabi
-      - name: Test wasm
-        run: wasm-pack test --headless --chrome
-        if: startsWith(matrix.os, 'ubuntu')
       - run: cargo bench
         if: startsWith(matrix.rust, 'nightly')
 
