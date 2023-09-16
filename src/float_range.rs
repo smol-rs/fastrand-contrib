@@ -213,7 +213,7 @@ mod tests {
 
     #[test]
     fn f32_range_in_bounds() {
-        let mut rng = Rng::new();
+        let mut rng = Rng::with_seed(42);
 
         let range = -2.0..2.0;
         for _ in 0..10000 {
@@ -223,7 +223,7 @@ mod tests {
 
     #[test]
     fn f32_range_wide_range_in_bounds() {
-        let mut rng = Rng::new();
+        let mut rng = Rng::with_seed(42);
 
         let range = f32::MIN..f32::MAX;
         for _ in 0..10000 {
@@ -233,7 +233,7 @@ mod tests {
 
     #[test]
     fn f32_range_unbounded_finite() {
-        let mut rng = Rng::new();
+        let mut rng = Rng::with_seed(42);
 
         let range = ..;
         for _ in 0..10000 {

@@ -6,9 +6,11 @@ rust-version = "1.43.1"
 
 [dependencies]
 fastrand = { version = "2.0.0", default-features = false }
+libm_dep = { package = "libm", version = "0.2.7", optional = true }
 
 [features]
 default = ["std"]
 std = ["alloc", "fastrand/std"]
 alloc = ["fastrand/alloc"]
-
+# The `dep:` syntax was added in Rust 1.60. Our current MSRV is 1.43.
+libm = ["libm_dep"]
