@@ -1,8 +1,16 @@
 [package]
 name = "fastrand-contrib"
+# Make sure to modify CHANGELOG.md before releasing a new version.
 version = "0.1.0"
+authors = ["John Nunley <dev@notgull.net>", "Petr Nevyhoštěný <petr.nevyhosteny@gmail.com>"]
 edition = "2018"
 rust-version = "1.43.0"
+description = "Extension functionality for fastrand"
+license = "Apache-2.0 OR MIT"
+repository = "https://github.com/smol-rs/fastrand-contrib"
+keywords = ["simple", "fast", "rand", "random", "wyrand"]
+categories = ["algorithm"]
+exclude = ["/.*"]
 
 [dependencies]
 fastrand = { version = "2.0.0", default-features = false }
