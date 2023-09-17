@@ -48,6 +48,13 @@
 //! [`libm`]: https://crates.io/crates/libm
 
 #![cfg_attr(not(feature = "std"), no_std)]
+#![forbid(unsafe_code, future_incompatible, missing_docs)]
+#![doc(
+    html_favicon_url = "https://raw.githubusercontent.com/smol-rs/smol/master/assets/images/logo_fullsize_transparent.png"
+)]
+#![doc(
+    html_logo_url = "https://raw.githubusercontent.com/smol-rs/smol/master/assets/images/logo_fullsize_transparent.png"
+)]
 
 mod float_normal;
 mod float_range;
