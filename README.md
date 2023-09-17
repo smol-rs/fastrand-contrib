@@ -51,6 +51,7 @@ assert!(x >= 1.5 && x < 3.0);
 # Features
 
 - `std` (enabled by default): Enables the `std` library. Freestanding functions only work with this feature enabled. Also enables the `fastrand/std` feature.
+- `libm`: Uses [`libm`](https://crates.io/crates/libm) dependency for math functions in `no_std` environment.
 
 ## License
 
