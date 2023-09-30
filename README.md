@@ -1,13 +1,13 @@
-# fastrand
+# fastrand-contrib
 
-[![Build](https://github.com/smol-rs/fastrand/workflows/Build%20and%20test/badge.svg)](
-https://github.com/smol-rs/fastrand/actions)
+[![Build](https://github.com/smol-rs/fastrand-contrib/workflows/CI/badge.svg)](
+https://github.com/smol-rs/fastrand-contrib/actions)
 [![License](https://img.shields.io/badge/license-Apache--2.0_OR_MIT-blue.svg)](
-https://github.com/smol-rs/fastrand)
-[![Cargo](https://img.shields.io/crates/v/fastrand.svg)](
-https://crates.io/crates/fastrand)
-[![Documentation](https://docs.rs/fastrand/badge.svg)](
-https://docs.rs/fastrand)
+https://github.com/smol-rs/fastrand-contrib)
+[![Cargo](https://img.shields.io/crates/v/fastrand-contrib.svg)](
+https://crates.io/crates/fastrand-contrib)
+[![Documentation](https://docs.rs/fastrand-contrib/badge.svg)](
+https://docs.rs/fastrand-contrib)
 
 Extension functionality for the [`fastrand`] crate.
 
