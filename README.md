@@ -21,7 +21,7 @@ Various functions are exposed in this crate as top-level functions. These manipu
 thread-local RNG and can be used without any local state. Note that these require the `"std"`
 default feature to be enabled.
 
-```
+```rust
 use fastrand_contrib::f32_range;
 
 let x = f32_range(1.5..3.0);
@@ -30,13 +30,13 @@ assert!(x >= 1.5 && x < 3.0);
 
 To extend [`fastrand::Rng`], import the [`RngExt`] trait.
 
-```
+```rust
 use fastrand_contrib::RngExt;
 ```
 
 Now, all new methods are available on [`fastrand::Rng`].
 
-```
+```rust
 use fastrand::Rng;
 use fastrand_contrib::RngExt;
 
