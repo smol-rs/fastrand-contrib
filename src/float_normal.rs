@@ -1,7 +1,4 @@
-use core::{
-    cmp::PartialOrd,
-    ops::{Add, Mul, Neg},
-};
+use core::ops::{Add, Mul, Neg};
 
 use crate::BaseRng;
 
