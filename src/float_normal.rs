@@ -26,6 +26,7 @@ trait FloatExt:
     const EPSILON: Self;
 
     fn from_f64(x: f64) -> Self;
+    #[cfg(any(feature = "std", feature = "libm"))]
     fn gen(rng: &mut impl BaseRng) -> Self;
 }
 
@@ -47,6 +48,7 @@ macro_rules! impl_float_ext {
             fn from_f64(x: f64) -> Self {
                 x as $float
             }
+            #[cfg(any(feature = "std", feature = "libm"))]
             #[inline]
             fn gen(rng: &mut impl BaseRng) -> Self {
                 rng.$float()
