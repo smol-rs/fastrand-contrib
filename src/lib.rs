@@ -136,15 +136,15 @@ macro_rules! define_ext {
 
         $(
         #[cfg(feature = "std")]
+        impl GlobalRng {
+            $(#[$meta])*
+            fn $name(&mut self, $($argname:$argty),*) -> $ret {
+                $imp(self, $($argname),*)
+            }
+        }
+        #[cfg(feature = "std")]
         $(#[$meta])*
         pub fn $name($($argname:$argty),*) -> $ret {
-            impl GlobalRng {
-                $(#[$meta])*
-                fn $name(&mut self, $($argname:$argty),*) -> $ret {
-                    $imp(self, $($argname),*)
-                }
-            }
-
             GlobalRng::$name(&mut GlobalRng, $($argname),*)
         }
         )*
