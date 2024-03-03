@@ -118,7 +118,7 @@ macro_rules! define_ext {
         fn $name:ident(&mut self, $($argname:ident:$argty:ty),*) -> $ret:ty => $imp:path;
     )*) => {
         /// Extra methods for [`fastrand::Rng`].
-        pub trait RngExt {
+        pub trait RngExt: __private::Sealed {
             $(
             $(#[$meta])*
             fn $name(&mut self, $($argname: $argty),*) -> $ret;
