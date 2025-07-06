@@ -23,6 +23,7 @@ pub(super) fn f64_approx(rng: &mut impl BaseRng, mu: f64, sigma: f64) -> f64 {
 trait FloatExt:
     Add<Self, Output = Self> + Mul<Self, Output = Self> + Neg<Output = Self> + PartialOrd<Self> + Sized
 {
+    #[cfg(any(feature = "std", feature = "libm"))]
     const EPSILON: Self;
 
     fn from_f64(x: f64) -> Self;
@@ -42,6 +43,7 @@ trait FloatMathExt: FloatExt {
 macro_rules! impl_float_ext {
     ($float:ident) => {
         impl FloatExt for $float {
+            #[cfg(any(feature = "std", feature = "libm"))]
             const EPSILON: Self = $float::EPSILON;
 
             #[inline]
